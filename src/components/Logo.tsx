@@ -1,0 +1,16 @@
+import Image from "next/image";
+
+const Logo = () => {
+  return (
+    <Image
+      loading="lazy"
+      width={1000}
+      height={1000}
+      src="/images/logo.png"
+      alt="Aasif Ali - logo"
+      className="h-[48px] w-[170px] object-contain"
+    />
+  );
+};
+
+export default Logo;
