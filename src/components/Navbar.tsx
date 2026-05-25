@@ -10,7 +10,7 @@ const navLinks = [
   { name: "Services", href: "#services" },
   { name: "Skills", href: "#skills" },
   { name: "Portfolio", href: "#portfolio" },
-  { name: "Testimonials", href: "#testimonials" },
+  // { name: "Testimonials", href: "#testimonials" },
   { name: "Contact", href: "#contact" },
 ];
 
@@ -32,7 +32,7 @@ const Navbar = () => {
             ))}
           </ul>
         </nav>
-        <a href="tel:+917889423564" className="hidden md:block">
+        <a href="tel:+916005852514" className="hidden md:block">
           <motion.button
             initial={{ backgroundColor: "var(--bg-primary)" }}
             whileHover={{ backgroundColor: "var(--text-primary)" }}
@@ -79,7 +79,7 @@ const Navbar = () => {
                 </ul>
               </nav>
               <div className="mt-4 pt-4 border-t border-gray-700">
-                <a href="tel:+917889423564" onClick={() => setIsOpenNav(false)}>
+                <a href="tel:+916005852514" onClick={() => setIsOpenNav(false)}>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.2 }}

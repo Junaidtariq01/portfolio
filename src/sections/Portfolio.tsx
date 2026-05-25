@@ -55,7 +55,7 @@ const Portfolio = () => {
               Latest Work
             </h1>
           </div>
-          <a href="tel:+917889423564" className="hidden md:block">
+          <a href="tel:+916005852514" className="hidden md:block">
             <button className="h-[48px] w-[138px] rounded-md bg-[var(--text-primary)] text-sm font-black text-white">
               CONTACT
             </button>

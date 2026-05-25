@@ -24,7 +24,7 @@ const Hero = () => {
           aria-live="polite"
         >
           <span className="text-base font-normal uppercase leading-8 text-[var(--text-primary)]">
-            Aasif Ali
+            Junaid Tariq
           </span>
 
           <h1
@@ -67,7 +67,7 @@ const Hero = () => {
               width={2000}
               height={2000}
               src="/images/hero-desktop.png"
-              alt="Aasif Ali - Full Stack Developer, standing with laptop and code snippets in the background"
+              alt="Junaid Tariq - Full Stack Developer, standing with laptop and code snippets in the background"
               className={`h-[554px] w-[568px] object-contain transition-opacity duration-500 ${
                 isDesktopLoaded ? "opacity-100" : "opacity-0"
               }`}
@@ -85,7 +85,7 @@ const Hero = () => {
               width={2000}
               height={2000}
               src="/images/hero-mobile.png"
-              alt="Aasif Ali - Mobile Developer, working on a smartphone UI"
+              alt="Junaid Tariq - Mobile Developer, working on a smartphone UI"
               className={`h-[320px] w-[330px] object-contain transition-opacity duration-500 ${
                 isMobileLoaded ? "opacity-100" : "opacity-0"
               }`}

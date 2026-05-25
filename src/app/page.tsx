@@ -19,10 +19,10 @@ const Services = dynamic(() => import("@/sections/Services"), {
   loading: () => <Loader />,
 });
 
-const Pricing = dynamic(() => import("@/sections/PricingSection"), {
-  ssr: false,
-  loading: () => <Loader />,
-});
+// const Pricing = dynamic(() => import("@/sections/PricingSection"), {
+//   ssr: false,
+//   loading: () => <Loader />,
+// });
 
 const Skills = dynamic(() => import("@/sections/Skills"), {
   ssr: false,
@@ -39,10 +39,10 @@ const Education = dynamic(() => import("@/sections/Education"), {
   loading: () => <Loader />,
 });
 
-const Testimonials = dynamic(() => import("@/sections/Testimonials"), {
-  ssr: false,
-  loading: () => <Loader />,
-});
+// const Testimonials = dynamic(() => import("@/sections/Testimonials"), {
+//   ssr: false,
+//   loading: () => <Loader />,
+// });
 
 const Contact = dynamic(() => import("@/sections/Contact"), {
   ssr: false,
@@ -60,11 +60,11 @@ export default function Page() {
       <Hero />
       <About />
       <Services />
-      <Pricing />
+      {/* <Pricing /> */}
       <Skills />
       <Portfolio />
       <Education />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <Contact />
       <Footer />
       <ScrollToTop />

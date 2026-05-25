@@ -27,9 +27,10 @@ const footerLinks = [
   {
     title: "Connect",
     links: [
-      { name: "LinkedIn", href: "https://linkedin.com/in/meAasifAli" },
-      { name: "GitHub", href: "https://github.com/meAasifAli" },
-      { name: "Instagram", href: "https://instagram.com/_asif_ali10" },
+      { name: "LinkedIn", href: "https://linkedin.com/in/JunaidTariq01" },
+      { name: "GitHub", href: "https://github.com/JunaidTariq01" },
+      { name: "Instagram", href: "https://instagram.com/" },
+      { name: "YouTube", href: "https://youtube.com/@theupcomingai" },
     ],
   },
 ];
@@ -48,7 +49,7 @@ const Footer = () => {
           >
             <div className="flex items-center space-x-2">
               <span className="text-xl font-bold text-[var(--text-secondary)]">
-                Aasif Ali
+                Junaid Tariq
               </span>
             </div>
             <p className="text-[var(--text-secondary)] opacity-65 text-sm leading-relaxed">
@@ -95,7 +96,7 @@ const Footer = () => {
         >
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-[var(--text-secondary)] opacity-65 text-sm">
-              © {currentYear} Aasif Ali. All rights reserved.
+              © {currentYear} Junaid Tariq. All rights reserved.
             </p>
             <div className="flex space-x-6">
               <a

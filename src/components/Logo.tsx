@@ -7,7 +7,7 @@ const Logo = () => {
       width={1000}
       height={1000}
       src="/images/logo.png"
-      alt="Aasif Ali - logo"
+      alt="Junaid Tariq - logo"
       className="h-[48px] w-[170px] object-contain"
     />
   );

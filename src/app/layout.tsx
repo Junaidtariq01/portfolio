@@ -1,6 +1,9 @@
 import LocalFont from "next/font/local";
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import Navbar from "@/components/Navbar";
+import "./globals.css";
+
 
 const local = LocalFont({
   src: [
@@ -42,12 +45,11 @@ const local = LocalFont({
   ],
   variable: "--font-local",
 });
-import "./globals.css";
-import Navbar from "@/components/Navbar";
+
 
 export const metadata: Metadata = {
   title: "Portfolio",
-  description: "Aasif's Developer Portfolio",
+  description: "Junaid Tariq's - Portfolio",
 };
 
 export default function RootLayout({

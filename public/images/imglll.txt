@@ -1,0 +1,4 @@
+about-desktop.png
+about-mobile.png
+hero-mobile.png
+hero-desktop.png
