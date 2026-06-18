@@ -25,9 +25,6 @@ export async function POST(request: Request) {
         { status: 500 }
       );
     }
-    console.log("API KEY EXISTS:", !!process.env.SENDGRID_API_KEY);
-  console.log("FROM EXISTS:", !!process.env.SENDGRID_FROM);
-  console.log("TO EXISTS:", !!process.env.SENDGRID_TO);
 
     mail.setApiKey(apiKey);
 
@@ -94,7 +91,7 @@ body {
 <div class="container">
   <div class="header">
     <h2 style="margin:0;color:#7c3aed;">
-      New Contact Message
+      New Contact
     </h2>
   </div>
 

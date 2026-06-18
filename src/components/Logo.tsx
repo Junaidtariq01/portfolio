@@ -8,7 +8,7 @@ const Logo = () => {
       height={1000}
       src="/logo2.png"
       alt="Junaid Tariq - logo"
-      className="h-[65px] w-[180px] object-contain"
+      className="h-[65px] w-[180px] object-contain animate-spin"
     />
   );
 };
