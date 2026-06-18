@@ -42,6 +42,31 @@ const Contact = () => {
   });
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<{
+    name?: string;
+    email?: string;
+    message?: string;
+  }>({});
+
+  const validateField = (name: string, value: string): string => {
+    switch (name) {
+      case "name":
+        if (!value.trim()) return "Name is required";
+        if (value.trim().length < 2) return "Name must be at least 2 characters";
+        return "";
+      case "email":
+        if (!value.trim()) return "Email is required";
+        const emailRegex = /^(?!.*\.\.)(?!.*\.$)(?!^\.)[A-Za-z0-9]+([._%+-]?[A-Za-z0-9]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,12}$/;
+        if (!emailRegex.test(value)) return "Please enter a valid email address";
+        return "";
+      case "message":
+        if (!value.trim()) return "Message is required";
+        if (value.trim().length < 10) return "Message must be at least 10 characters";
+        return "";
+      default:
+        return "";
+    }
+  };
 
   useEffect(() => {
     let timer: number;
@@ -59,6 +84,22 @@ const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate all fields
+    const errors: typeof fieldErrors = {};
+    errors.name = validateField("name", formData.name);
+    errors.email = validateField("email", formData.email);
+    errors.message = validateField("message", formData.message);
+    
+    setFieldErrors(errors);
+    
+    // If there are errors, don't submit
+    if (errors.name || errors.email || errors.message) {
+      setStatus("error");
+      setErrorMessage("Please fix the errors above before submitting.");
+      return;
+    }
+
     setStatus("sending");
     setErrorMessage("");
 
@@ -76,6 +117,7 @@ const Contact = () => {
 
       setStatus("success");
       setFormData({ name: "", email: "", message: "" });
+      setFieldErrors({});
     } catch (error) {
       setStatus("error");
       setErrorMessage((error as Error).message || "Something went wrong.");
@@ -89,6 +131,33 @@ const Contact = () => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+
+    if (name === "email") {
+      const emailError = validateField("email", value);
+      setFieldErrors((prev) => ({
+        ...prev,
+        email: emailError,
+      }));
+      return;
+    }
+
+    if (fieldErrors[name as keyof typeof fieldErrors]) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
+
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.currentTarget;
+    const error = validateField(name, value);
+    setFieldErrors((prev) => ({
+      ...prev,
+      [name]: error,
     }));
   };
 
@@ -124,7 +193,7 @@ const Contact = () => {
             media.
           </p>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} noValidate className="space-y-6">
             <div>
               <label
                 htmlFor="name"
@@ -139,9 +208,16 @@ const Contact = () => {
                 placeholder="Enter your Name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-200 rounded-md focus:ring-2 focus:ring-[var(--text-primary)] focus:border-[var(--text-primary)] bg-white/5 backdrop-blur-sm text-white placeholder-gray-400"
-                required
+                onBlur={handleBlur}
+                className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-[var(--text-primary)] focus:border-[var(--text-primary)] bg-white/5 backdrop-blur-sm text-white placeholder-gray-400 transition-colors ${
+                  fieldErrors.name
+                    ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                    : "border-gray-200"
+                }`}
               />
+              {fieldErrors.name && (
+                <p className="mt-1 text-sm text-red-400">{fieldErrors.name}</p>
+              )}
             </div>
             <div>
               <label
@@ -157,9 +233,17 @@ const Contact = () => {
                 placeholder="Enter your Email address"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-200 rounded-md focus:ring-2 focus:ring-[var(--text-primary)] focus:border-[var(--text-primary)] bg-white/5 backdrop-blur-sm text-white placeholder-gray-400"
-                required
+                onBlur={handleBlur}
+                aria-invalid={!!fieldErrors.email}
+                className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-[var(--text-primary)] focus:border-[var(--text-primary)] bg-white/5 backdrop-blur-sm text-white placeholder-gray-400 transition-colors ${
+                  fieldErrors.email
+                    ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                    : "border-gray-200"
+                }`}
               />
+              {fieldErrors.email && (
+                <p className="mt-1 text-sm text-red-400">{fieldErrors.email}</p>
+              )}
             </div>
             <div>
               <label
@@ -174,16 +258,35 @@ const Contact = () => {
                 placeholder="Your message"
                 value={formData.message}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-200 rounded-md focus:ring-2 focus:ring-[var(--text-primary)] focus:border-[var(--text-primary)] bg-white/5 backdrop-blur-sm text-white placeholder-gray-400"
-                required
+                className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-[var(--text-primary)] focus:border-[var(--text-primary)] bg-white/5 backdrop-blur-sm text-white placeholder-gray-400 transition-colors ${
+                  fieldErrors.message
+                    ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                    : "border-gray-200"
+                }`}
               />
+              {fieldErrors.message && (
+                <p className="mt-1 text-sm text-red-400">{fieldErrors.message}</p>
+              )}
             </div>
             {status === "success" && (
-              <p className="text-sm text-green-400">Message sent successfully!</p>
+              <motion.p
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-sm text-green-400 font-medium"
+              >
+                ✓ Message sent successfully!
+              </motion.p>
             )}
             {status === "error" && (
-              <p className="text-sm text-red-400">{errorMessage}</p>
+              <motion.p
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-sm text-red-400 font-medium"
+              >
+                ✗ {errorMessage}
+              </motion.p>
             )}
             <motion.button
               initial={{ scale: 1 }}
@@ -191,7 +294,7 @@ const Contact = () => {
               transition={{ duration: 0.5, ease: "easeInOut" }}
               type="submit"
               disabled={status === "sending"}
-              className="w-[154px] h-[48px] bg-[var(--text-primary)] uppercase text-sm text-white font-black rounded-md disabled:opacity-50"
+              className="w-[154px] h-[48px] bg-[var(--text-primary)] uppercase text-sm text-white font-black rounded-md disabled:opacity-50 transition-opacity"
             >
               {status === "sending" ? "Sending..." : "Send Message"}
             </motion.button>
