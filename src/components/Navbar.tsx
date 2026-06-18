@@ -32,7 +32,7 @@ const Navbar = () => {
             ))}
           </ul>
         </nav>
-        <a href="tel:+916005852514" className="hidden md:block">
+        <a href="#contact" className="hidden md:block">
           <motion.button
             initial={{ backgroundColor: "var(--bg-primary)" }}
             whileHover={{ backgroundColor: "var(--text-primary)" }}
@@ -79,7 +79,7 @@ const Navbar = () => {
                 </ul>
               </nav>
               <div className="mt-4 pt-4 border-t border-gray-700">
-                <a href="tel:+916005852514" onClick={() => setIsOpenNav(false)}>
+                <a href="#contact" onClick={() => setIsOpenNav(false)}>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.2 }}

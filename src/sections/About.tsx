@@ -66,6 +66,7 @@ const About = () => {
             )}
             <Image
               loading="lazy"
+              unoptimized
               width={2000}
               height={2000}
               src="/images/about-desktop.png"
@@ -84,6 +85,7 @@ const About = () => {
             )}
             <Image
               loading="lazy"
+              unoptimized
               width={2000}
               height={2000}
               src="/images/about-mobile.png"

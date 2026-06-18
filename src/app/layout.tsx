@@ -50,6 +50,9 @@ const local = LocalFont({
 export const metadata: Metadata = {
   title: "Portfolio",
   description: "Junaid Tariq's - Portfolio",
+  icons:{
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

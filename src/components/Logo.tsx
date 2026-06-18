@@ -3,7 +3,7 @@ import Image from "next/image";
 const Logo = () => {
   return (
     <Image
-      loading="lazy"
+      priority
       width={1000}
       height={1000}
       src="/images/logo.png"

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 const socialLinks = [
@@ -26,8 +26,9 @@ const socialLinks = [
     name: "YouTube",
     url: "https://youtube.com/@theupcomingai",
     icon: (
-      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 29 22">
+      <path d="M27.9727 3.12324C27.6435 1.89323 26.6768 0.926623 25.4468 0.597366C23.2197 2.24288e-07 14.285 0 14.285 0C14.285 0 5.35042 2.24288e-07 3.12323 0.597366C1.89323 0.926623 0.926623 1.89323 0.597366 3.12324C2.24288e-07 5.35042 0 10 0 10C0 10 2.24288e-07 14.6496 0.597366 16.8768C0.926623 18.1068 1.89323 19.0734 3.12323 19.4026C5.35042 20 14.285 20 14.285 20C14.285 20 23.2197 20 25.4468 19.4026C26.6768 19.0734 27.6435 18.1068 27.9727 16.8768C28.5701 14.6496 28.5701 10 28.5701 10C28.5701 10 28.5677 5.35042 27.9727 3.12324Z" />
+      <path d="M11.4253 14.2854L18.8477 10.0004L11.4253 5.71533V14.2854Z" fill="#9c27e4"/>
       </svg>
     ),
   },
@@ -39,11 +40,46 @@ const Contact = () => {
     email: "",
     message: "",
   });
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    let timer: number;
+
+    if (status === "success") {
+      timer = window.setTimeout(() => {
+        setStatus("idle");
+      }, 5000);
+    }
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [status]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log("Form submitted:", formData);
+    setStatus("sending");
+    setErrorMessage("");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data?.error || "Failed to send message.");
+      }
+
+      setStatus("success");
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      setStatus("error");
+      setErrorMessage((error as Error).message || "Something went wrong.");
+    }
   };
 
   const handleChange = (
@@ -143,14 +179,21 @@ const Contact = () => {
                 required
               />
             </div>
+            {status === "success" && (
+              <p className="text-sm text-green-400">Message sent successfully!</p>
+            )}
+            {status === "error" && (
+              <p className="text-sm text-red-400">{errorMessage}</p>
+            )}
             <motion.button
               initial={{ scale: 1 }}
               whileHover={{ scale: 1.1 }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
               type="submit"
-              className="w-[154px] h-[48px] bg-[var(--text-primary)] uppercase text-sm text-white font-black rounded-md"
+              disabled={status === "sending"}
+              className="w-[154px] h-[48px] bg-[var(--text-primary)] uppercase text-sm text-white font-black rounded-md disabled:opacity-50"
             >
-              Send Message
+              {status === "sending" ? "Sending..." : "Send Message"}
             </motion.button>
           </form>
         </motion.div>
@@ -185,17 +228,24 @@ const Contact = () => {
                       d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                     />
                   </svg>
+                
                 </div>
                 <span className="text-white ml-4">
                   <a href="mailto: thejunaidtariq@gmail.com">thejunaidtariq@gmail.com</a>
                 </span>
-              </div>
-              <div className="flex items-center">
+               </div>
+
+
+
+
+
+
+               {/* <div className="flex items-center">
                 <div
                   className="p-4 rounded-full bg-[var(--text-primary)]"
                   aria-hidden="true"
                 >
-                  <svg
+                   <svg 
                     className="w-6 h-6 text-white"
                     fill="none"
                     stroke="currentColor"
@@ -208,11 +258,12 @@ const Contact = () => {
                       d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                     />
                   </svg>
-                </div>
-                <span className="text-white ml-4">
-                  <a href="tel:+916005852514">+91 6005852514</a>
-                </span>
-              </div>
+                </div> 
+                 <span className="text-white ml-4">
+                  <a />
+                </span> 
+              </div> */}
+
             </div>
 
             <div className="mt-8">
