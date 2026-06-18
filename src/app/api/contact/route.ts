@@ -25,6 +25,9 @@ export async function POST(request: Request) {
         { status: 500 }
       );
     }
+    console.log("API KEY EXISTS:", !!process.env.SENDGRID_API_KEY);
+  console.log("FROM EXISTS:", !!process.env.SENDGRID_FROM);
+  console.log("TO EXISTS:", !!process.env.SENDGRID_TO);
 
     mail.setApiKey(apiKey);
 
