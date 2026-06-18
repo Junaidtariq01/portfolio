@@ -333,8 +333,9 @@ const Contact = () => {
                   </svg>
                 
                 </div>
-                <span className="text-white ml-4">
-                  <a href="mailto: thejunaidtariq@gmail.com">thejunaidtariq@gmail.com</a>
+                <span className="text-white ml-3">
+                  <a href="mailto: thejunaidtariq@gmail.com" className="text-lg font-thin break-all min-w-0">
+                    thejunaidtariq@gmail.com</a>
                 </span>
                </div>
 
@@ -373,7 +374,7 @@ const Contact = () => {
               <h4 className="text-lg font-semibold text-white mb-4">
                 Connect with me
               </h4>
-              <div className="flex gap-4">
+              <div className="flex gap-4 ">
                 {socialLinks.map((link) => (
                   <a
                     key={link.name}

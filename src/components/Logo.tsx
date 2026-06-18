@@ -4,11 +4,11 @@ const Logo = () => {
   return (
     <Image
       priority
-      width={1000}
-      height={1000}
+      width={60}
+      height={60}
       src="/logo2.png"
       alt="Junaid Tariq - logo"
-      className="h-[65px] w-[180px] object-contain animate-spin"
+      className="h-14 w-14 object-contain animate-spin"
     />
   );
 };

@@ -42,12 +42,12 @@ const Portfolio = () => {
       className="flex min-h-screen justify-center items-center py-4 md:py-6 lg:py-8 z-0 w-full"
     >
       <div className="w-full px-4 lg:px-0">
-        <div className="flex flex-col md:flex-row md:justify-between items-center justify-center gap-4 w-full lg:w-4/5 mx-auto">
+        <div className="md:justify-between items-center justify-center gap-4 w-full lg:w-4/5 mx-auto">
           <div>
             <span
               className="text-base font-normal uppercase leading-8 text-[var(--text-primary)]"
-              id="service-heading"
-            >
+              id="service-heading">
+
               Portfolio
             </span>
 

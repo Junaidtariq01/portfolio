@@ -10,7 +10,6 @@ const navLinks = [
   { name: "Services", href: "#services" },
   { name: "Skills", href: "#skills" },
   { name: "Portfolio", href: "#portfolio" },
-  // { name: "Testimonials", href: "#testimonials" },
   { name: "Contact", href: "#contact" },
 ];
 
@@ -19,59 +18,80 @@ const Navbar = () => {
 
   return (
     <header className="w-full bg-[var(--bg-primary)] pt-4 px-4 lg:px-0 relative">
-      <div className="flex flex-row items-center justify-between  w-full lg:w-4/5 mx-auto">
-        <div className="flex items-center justify-between ">
+      <div className="flex items-center justify-between w-full lg:w-4/5 mx-auto">
+        {/* Logo + Name */}
+        <div className="flex items-center gap-1 shrink-0">
           <Logo />
-        <div className=" text-lg font-bold h-1.9 w-2.5 mx-auto text-white tracking-tight cursor-pointer " >JunaidTariq</div>
+          <span className="text-lg font-bold text-white tracking-tight whitespace-nowrap cursor-pointer">
+            Junaid Tariq
+          </span>
         </div>
-        <nav className="hidden md:block w-full">
-          <ul className="flex flex-row items-center justify-center md:gap-10 w-full">
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex flex-1 justify-center">
+          <ul className="flex items-center gap-10">
             {navLinks.map((link) => (
-              <li key={link.name} className="text-base font-normal text-white">
-                <a href={link.href}>{link.name}</a>
+              <li key={link.name}>
+                <a
+                  href={link.href}
+                  className="text-base font-normal text-white hover:text-[var(--text-primary)] transition-colors duration-300"
+                >
+                  {link.name}
+                </a>
               </li>
             ))}
           </ul>
         </nav>
-        <a href="#contact" className="hidden md:block">
-          <motion.button
-            initial={{ backgroundColor: "var(--bg-primary)" }}
-            whileHover={{ backgroundColor: "var(--text-primary)" }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            className="h-[48px] w-[138px] rounded-md border border-gray-700 text-sm font-black text-white"
-          >
-            CONTACT
-          </motion.button>
-        </a>
-        <div className="block md:hidden">
+
+        {/* Desktop Contact Button */}
+        <div className="hidden md:block shrink-0">
+          <a href="#contact">
+            <motion.button
+              initial={{ backgroundColor: "var(--bg-primary)" }}
+              whileHover={{
+                backgroundColor: "var(--text-primary)",
+              }}
+              transition={{ duration: 0.4 }}
+              className="h-12 w-[138px] rounded-md border border-gray-700 text-sm font-black text-white"
+            >
+              CONTACT
+            </motion.button>
+          </a>
+        </div>
+
+        {/* Mobile Menu Icon */}
+        <div className="md:hidden">
           {isOpenNav ? (
             <CircleX
-              onClick={() => setIsOpenNav((pre) => !pre)}
-              className="h-12 w-12 text-white"
+              onClick={() => setIsOpenNav(false)}
+              className="h-10 w-10 text-white cursor-pointer"
             />
           ) : (
             <SquareMenu
-              onClick={() => setIsOpenNav((pre) => !pre)}
-              className="h-12 w-12 text-white"
+              onClick={() => setIsOpenNav(true)}
+              className="h-10 w-10 text-white cursor-pointer"
             />
           )}
         </div>
+
+        {/* Mobile Menu */}
         {isOpenNav && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="z-10 absolute top-20 right-0 w-64 rounded-lg overflow-hidden bg-[var(--bg-primary)]/95 backdrop-blur-md shadow-lg md:hidden"
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.25 }}
+            className="absolute top-full right-4 mt-4 w-64 rounded-xl overflow-hidden bg-[var(--bg-primary)]/95 backdrop-blur-md shadow-xl border border-gray-800 z-50 md:hidden"
           >
             <div className="p-4">
-              <nav className="w-full">
-                <ul className="flex flex-col items-start justify-center gap-2 w-full">
+              <nav>
+                <ul className="flex flex-col gap-2">
                   {navLinks.map((link) => (
-                    <li key={link.name} className="w-full">
+                    <li key={link.name}>
                       <a
                         href={link.href}
                         onClick={() => setIsOpenNav(false)}
-                        className="block w-full text-left px-4 py-2 text-base font-medium text-white hover:text-[var(--text-primary)] transition-colors duration-300"
+                        className="block rounded-md px-4 py-3 text-white hover:bg-white/5 hover:text-[var(--text-primary)] transition-all duration-300"
                       >
                         {link.name}
                       </a>
@@ -79,12 +99,16 @@ const Navbar = () => {
                   ))}
                 </ul>
               </nav>
+
               <div className="mt-4 pt-4 border-t border-gray-700">
-                <a href="#contact" onClick={() => setIsOpenNav(false)}>
+                <a
+                  href="#contact"
+                  onClick={() => setIsOpenNav(false)}
+                >
                   <motion.button
                     whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.2 }}
-                    className="w-full h-[40px] rounded-md bg-[var(--text-primary)] text-sm font-black text-white hover:bg-[var(--text-primary)]/90 transition-colors duration-300"
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full h-11 rounded-md bg-[var(--text-primary)] text-white text-sm font-black"
                   >
                     CONTACT
                   </motion.button>
