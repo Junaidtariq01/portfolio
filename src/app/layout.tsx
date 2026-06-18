@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   title: "Portfolio",
   description: "Junaid Tariq's - Portfolio",
   icons:{
-    icon: "/favicon.ico",
+    icon: "/logo2.png ",
   },
 };
 

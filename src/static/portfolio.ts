@@ -25,7 +25,7 @@ export const projects: projectProps[] = [
     thumbnail:
       "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     year: "February 2025",
-    technologies: ["React", "Node.js", "Express", "MongoDB", "Socket.IO"],
+    technologies: ["React", "Node.js", "Express", "MongoDB", ],
   },
   {
     id: 3,

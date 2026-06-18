@@ -1,428 +1,181 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 
-interface Point3D {
-  x: number;
-  y: number;
-  z: number;
-  skill: string;
-}
+// interface CargoSkill {
+//   name: string;
+//   x: number;
+//   y: number;
+//   width: number;
+//   color: string;
+// }
 
-interface Point2D extends Point3D {
-  x2d: number;
-  y2d: number;
-  scale: number;
-  proximity: number;
-  pulsePhase: number;
-}
-
-interface MousePosition {
-  x: number;
-  y: number;
-}
-
-interface Particle {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  age: number;
-  lifetime: number;
-  color: string;
-}
-
-interface RippleWave {
-  age: number;
-  lifetime: number;
-  radius: number;
-}
-
-const skills: string[] = [
+const skills = [
   "React",
-  "TypeScript",
   "Next.js",
-  "Tailwind CSS",
+  "TypeScript",
+  "Tailwind",
   "Node.js",
   "Express",
   "MongoDB",
   "PostgreSQL",
-  "Git",
-  "Docker",
+  "Python",
+  "Django",
+  "FastAPI",
   "AWS",
-  "CI/CD",
-  "JavaScript",
-  "HTML/CSS",
+  "Docker",
   "REST API",
   "GraphQL",
-  "Java",
-  "Spring boot",
-  "Python",
-  "FastAPI",
-  "Django",
-  "DNS",
+  "Git",
+  "CI/CD",
   "Cloudflare",
 ];
 
-const Skills: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [rotation, setRotation] = useState<MousePosition>({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [lastMouse, setLastMouse] = useState<MousePosition>({ x: 0, y: 0 });
-  const [mousePos, setMousePos] = useState<MousePosition>({ x: 0, y: 0 });
-  const animationRef = useRef<number | null>(null);
-  const autoRotateRef = useRef<number>(0);
-  const velocityRef = useRef<MousePosition>({ x: 0, y: 0 });
-  const particlesRef = useRef<Particle[]>([]);
-  const rippleRef = useRef<RippleWave | null>(null);
-  const timeRef = useRef<number>(0);
-  const zoomRef = useRef<number>(1);
+const skillColors = [
+  "#38BDF8",
+  "#86EFAC",
+  "#CBD5E1",
+  "#4ADE80",
+  "#93C5FD",
+  "#FDE68A",
+  "#34D399",
+  "#5EEAD4",
+  "#Feee24",
+  "#F472B6",
+  "#C4B5FD",
+  "#FB3C",
+  "#FF6B00",
+  "#FF7F00",
+  "#FFFF00",
+  "#DFFF00",
+  "#32FF00",
+  "#39FF14",
+  "#00FF00",
+  "#00FFFF",
+  "#00E5FF",
+  "#00BFFF",
+  "#007BFF",
+  "#1F51FF",
+  "#BF00FF",
+  "#8F00FF",
+  "#FF10F0",
+  "#FF1493",
+  "#FF00FF",
+  "#00FFA3",
+  "#00FFD5",
+  "#00FFB3",
+  "#FFD700",
+];
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+const carrier = {
+  x: 210,
+  bottom: 292,
+  cargoX: 236,
+  maxCargoWidth: 452,
+  rowGap: 40,
+  crateHeight: 34,
+  crateGap: 8,
+  bottomPadding: 26,
+  topPadding: 14,
+};
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+const getCrateWidth = (skill: string) =>
+  Math.max(54, Math.min(118, skill.length * 9 + 28));
 
-    const dpr = window.devicePixelRatio || 1;
+const createCargoLayout = (skillList: string[]) => {
+  const rows: { name: string; width: number; color: string }[][] = [[]];
+  let rowWidth = 0;
 
-    const updateSize = (): void => {
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      ctx.scale(dpr, dpr);
-    };
+  skillList.forEach((name, index) => {
+    const width = getCrateWidth(name);
+    const nextWidth = rowWidth === 0 ? width : rowWidth + carrier.crateGap + width;
 
-    updateSize();
-    window.addEventListener("resize", updateSize);
+    if (nextWidth > carrier.maxCargoWidth && rows[rows.length - 1].length > 0) {
+      rows.push([]);
+      rowWidth = 0;
+    }
 
-    // Create 3D points for skills using Fibonacci sphere algorithm
-    const radius = 140;
-    const points: Point3D[] = skills.map((skill, i) => {
-      const phi = Math.acos(-1 + (2 * i) / skills.length);
-      const theta = Math.sqrt(skills.length * Math.PI) * phi;
-
-      return {
-        x: radius * Math.cos(theta) * Math.sin(phi),
-        y: radius * Math.sin(theta) * Math.sin(phi),
-        z: radius * Math.cos(phi),
-        skill: skill,
-      };
+    rows[rows.length - 1].push({
+      name,
+      width,
+      color: skillColors[index % skillColors.length],
     });
+    rowWidth = rowWidth === 0 ? width : rowWidth + carrier.crateGap + width;
+  });
 
-    // Helper function to create particles
-    const createParticles = (x: number, y: number, color: string): void => {
-      for (let i = 0; i < 4; i++) {
-        const angle = (Math.random() * Math.PI * 2);
-        const velocity = 2 + Math.random() * 2;
-        particlesRef.current.push({
-          x,
-          y,
-          vx: Math.cos(angle) * velocity,
-          vy: Math.sin(angle) * velocity,
-          age: 0,
-          lifetime: 0.6 + Math.random() * 0.4,
-          color,
-        });
-      }
-    };
+  const cargoTop =
+    carrier.bottom -
+    carrier.bottomPadding -
+    carrier.crateHeight -
+    (rows.length - 1) * carrier.rowGap;
+  const bedTop = cargoTop - carrier.topPadding;
+  const cargoSkills = rows.flatMap((row, rowIndex) => {
+    const totalWidth =
+      row.reduce((sum, skill) => sum + skill.width, 0) +
+      Math.max(0, row.length - 1) * carrier.crateGap;
+    let x = carrier.cargoX + (carrier.maxCargoWidth - totalWidth) / 2;
 
-    const render = (): void => {
-      const rect = canvas.getBoundingClientRect();
-      const width = rect.width;
-      const height = rect.height;
+    return row.map((skill) => {
+      const cargoSkill = {
+        ...skill,
+        x,
+        y: cargoTop + rowIndex * carrier.rowGap,
+      };
+      x += skill.width + carrier.crateGap;
+      return cargoSkill;
+    });
+  });
+  const cargoRight = Math.max(
+    carrier.x + 436,
+    ...cargoSkills.map((skill) => skill.x + skill.width + 20)
+  );
+  const bedRight = Math.min(708, cargoRight);
+  const rearWheelX = Math.min(bedRight - 82, 626);
+  const middleWheelX = rearWheelX - 106;
 
-      ctx.clearRect(0, 0, width, height);
+  return { cargoSkills, bedTop, bedRight, middleWheelX, rearWheelX };
+};
 
-      timeRef.current += 0.016;
+const textVariants = {
+  hidden: { opacity: 0, y: 100 },
+  visible: { opacity: 1, y: 0 },
+};
 
-      // Update auto-rotation
-      if (!isDragging) {
-        velocityRef.current.x *= 0.92; // Friction
-        velocityRef.current.y *= 0.92;
-        autoRotateRef.current += 0.005;
-        
-        setRotation((prev) => ({
-          x: prev.x + velocityRef.current.x,
-          y: prev.y + velocityRef.current.y,
-        }));
-      }
-
-      // Rotate and project points
-      const rotatedPoints: Point2D[] = points.map((p, idx) => {
-        let x = p.x;
-        let y = p.y;
-        let z = p.z;
-
-        // Y-axis rotation (horizontal)
-        const rotY = rotation.y + autoRotateRef.current;
-        const cosY = Math.cos(rotY);
-        const sinY = Math.sin(rotY);
-        const tempX = x * cosY - z * sinY;
-        const tempZ = x * sinY + z * cosY;
-        x = tempX;
-        z = tempZ;
-
-        // X-axis rotation (vertical)
-        const rotX = rotation.x;
-        const cosX = Math.cos(rotX);
-        const sinX = Math.sin(rotX);
-        const tempY = y * cosX - z * sinX;
-        z = y * sinX + z * cosX;
-        y = tempY;
-
-        // 3D to 2D projection with zoom
-        const perspective = 400;
-        const scale = (perspective / (perspective + z)) * zoomRef.current;
-        const x2d = x * scale + width / 2;
-        const y2d = y * scale + height / 2;
-
-        // Calculate proximity to cursor
-        const dx = x2d - mousePos.x;
-        const dy = y2d - mousePos.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const proximity = Math.max(0, 1 - distance / 150);
-
-        // Pulse phase for animation
-        const pulsePhase = Math.sin(timeRef.current * 3 + idx * 0.5) * 0.5 + 0.5;
-
-        return {
-          x,
-          y,
-          z,
-          x2d,
-          y2d,
-          scale,
-          skill: p.skill,
-          proximity,
-          pulsePhase,
-        };
-      });
-
-      // Sort by z (draw far points first)
-      rotatedPoints.sort((a, b) => a.z - b.z);
-
-      // Draw connections with energy flow
-      ctx.lineWidth = 1;
-      for (let i = 0; i < rotatedPoints.length; i++) {
-        for (let j = i + 1; j < rotatedPoints.length; j++) {
-          const p1 = rotatedPoints[i];
-          const p2 = rotatedPoints[j];
-          const dist = Math.hypot(p1.x2d - p2.x2d, p1.y2d - p2.y2d);
-          if (dist < 120) {
-            const opacity = 1 - dist / 120;
-            const energyGlow = Math.max(p1.proximity, p2.proximity) * 0.3;
-            ctx.strokeStyle = `rgba(139, 92, 246, ${opacity * (0.15 + energyGlow)})`;
-            ctx.beginPath();
-            ctx.moveTo(p1.x2d, p1.y2d);
-            ctx.lineTo(p2.x2d, p2.y2d);
-            ctx.stroke();
-          }
-        }
-      }
-
-      // Draw ripple effect
-      if (rippleRef.current) {
-        rippleRef.current.age += 0.016;
-        if (rippleRef.current.age > rippleRef.current.lifetime) {
-          rippleRef.current = null;
-        } else {
-          const progress = rippleRef.current.age / rippleRef.current.lifetime;
-          const rippleRadius = Math.max(0, progress * 300);
-          const alpha = Math.max(0, (1 - progress) * 0.5);
-          ctx.strokeStyle = `rgba(139, 92, 246, ${alpha})`;
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.arc(width / 2, height / 2, rippleRadius, 0, Math.PI * 2);
-          ctx.stroke();
-        }
-      }
-
-      // Draw points and labels with enhanced effects
-      rotatedPoints.forEach((p) => {
-        const normalizedZ = (p.z + 140) / 280;
-        const baseOpacity = 0.3 + normalizedZ * 0.7;
-        const proximityBoost = p.proximity * 0.5;
-        const opacity = Math.min(1, baseOpacity + proximityBoost);
-        
-        // Size with proximity effect
-        const baseSize = 3 + p.scale * 2;
-        const sizeWithProximity = Math.max(0.5, baseSize + p.proximity * 3);
-        
-        // Color gradient: purple (back) → cyan (front)
-        const cyanAmount = normalizedZ;
-        const red = Math.round(139 * (1 - cyanAmount) + 0 * cyanAmount);
-        const green = Math.round(92 * (1 - cyanAmount) + 255 * cyanAmount);
-        const blue = Math.round(246 * (1 - cyanAmount) + 255 * cyanAmount);
-
-        // Draw enhanced glow
-        const glowSize = Math.max(1, sizeWithProximity * (3 + p.pulsePhase));
-        const gradient = ctx.createRadialGradient(
-          p.x2d,
-          p.y2d,
-          0,
-          p.x2d,
-          p.y2d,
-          glowSize
-        );
-        gradient.addColorStop(0, `rgba(${red}, ${green}, ${blue}, ${opacity * 0.6})`);
-        gradient.addColorStop(1, `rgba(${red}, ${green}, ${blue}, 0)`);
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(p.x2d, p.y2d, glowSize, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Draw point
-        ctx.beginPath();
-        ctx.arc(p.x2d, p.y2d, Math.max(0.5, sizeWithProximity), 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${opacity})`;
-        ctx.fill();
-
-        // Draw highlight ring when proximity is high
-        if (p.proximity > 0.3) {
-          ctx.strokeStyle = `rgba(${red}, ${green}, ${blue}, ${p.proximity * 0.6})`;
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.arc(p.x2d, p.y2d, Math.max(2, sizeWithProximity + 5), 0, Math.PI * 2);
-          ctx.stroke();
-        }
-
-        // Draw text with pulse
-        const fontSize = 11 + p.scale * 2;
-        const textScale = 1 + p.proximity * 0.2 + p.pulsePhase * 0.1;
-        ctx.font = `600 ${fontSize * textScale}px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
-        ctx.fillStyle = `rgba(255, 255, 255, ${opacity * 0.95})`;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-
-        // Enhanced text shadow
-        ctx.shadowColor = `rgba(${red}, ${green}, ${blue}, 0.6)`;
-        ctx.shadowBlur = Math.max(2, 8 + p.proximity * 4);
-        ctx.fillText(p.skill, p.x2d, p.y2d - 12 * p.scale);
-        ctx.shadowBlur = 0;
-
-        // Create particles when skills are highlighted
-        if (p.proximity > 0.7 && Math.random() < 0.1) {
-          createParticles(p.x2d, p.y2d, `rgba(${red}, ${green}, ${blue}, 0.8)`);
-        }
-      });
-
-      // Update and draw particles
-      particlesRef.current = particlesRef.current.filter((p) => p.age < p.lifetime);
-      particlesRef.current.forEach((p) => {
-        p.age += 0.016;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += 0.1; // Gravity
-        const progress = p.age / p.lifetime;
-        const size = Math.max(0, 2 * (1 - progress));
-        ctx.fillStyle = p.color;
-        ctx.globalAlpha = Math.max(0, 1 - progress);
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = 1;
-      });
-
-      animationRef.current = requestAnimationFrame(render);
-    };
-
-    render();
-
-    return () => {
-      window.removeEventListener("resize", updateSize);
-      if (animationRef.current !== null) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, [rotation, isDragging, mousePos]);
-
-  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>): void => {
-    setIsDragging(true);
-    setLastMouse({ x: e.clientX, y: e.clientY });
-    velocityRef.current = { x: 0, y: 0 };
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>): void => {
-    const rect = canvasRef.current?.getBoundingClientRect();
-    if (rect) {
-      setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-    }
-
-    if (!isDragging) return;
-
-    const deltaX = e.clientX - lastMouse.x;
-    const deltaY = e.clientY - lastMouse.y;
-
-    velocityRef.current = { x: deltaX * 0.01, y: deltaY * 0.01 };
-
-    setRotation((prev) => ({
-      x: prev.x + deltaY * 0.01,
-      y: prev.y + deltaX * 0.01,
-    }));
-
-    setLastMouse({ x: e.clientX, y: e.clientY });
-  };
-
-  const handleMouseUp = (): void => {
-    setIsDragging(false);
-    // Create ripple effect on release
-    rippleRef.current = { age: 0, lifetime: 0.6, radius: 0 };
-  };
-
-  const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>): void => {
-    setIsDragging(true);
-    const touch = e.touches[0];
-    setLastMouse({ x: touch.clientX, y: touch.clientY });
-    velocityRef.current = { x: 0, y: 0 };
-  };
-
-  const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>): void => {
-    const touch = e.touches[0];
-    const rect = canvasRef.current?.getBoundingClientRect();
-    if (rect) {
-      setMousePos({ x: touch.clientX - rect.left, y: touch.clientY - rect.top });
-    }
-
-    if (!isDragging) return;
-
-    const deltaX = touch.clientX - lastMouse.x;
-    const deltaY = touch.clientY - lastMouse.y;
-
-    velocityRef.current = { x: deltaX * 0.01, y: deltaY * 0.01 };
-
-    setRotation((prev) => ({
-      x: prev.x + deltaY * 0.01,
-      y: prev.y + deltaX * 0.01,
-    }));
-
-    setLastMouse({ x: touch.clientX, y: touch.clientY });
-  };
-
-  const handleTouchEnd = (): void => {
-    setIsDragging(false);
-    rippleRef.current = { age: 0, lifetime: 0.6, radius: 0 };
-  };
-
-  const handleWheel = (e: React.WheelEvent<HTMLCanvasElement>): void => {
-    e.preventDefault();
-    const zoomDelta = e.deltaY > 0 ? 0.9 : 1.1;
-    zoomRef.current = Math.max(0.5, Math.min(2, zoomRef.current * zoomDelta));
-  };
+const Skills: React.FC = () => {
+  const { cargoSkills, bedTop, bedRight, middleWheelX, rearWheelX } =
+    createCargoLayout(skills);
+  const chassisWidth = bedRight - 224 + 2;
+  const bedCornerStart = bedRight - 36;
 
   return (
     <section
       id="skills"
-      className="min-h-screen py-4 lg:py-8 flex flex-col gap-4 sm:gap-6 md:gap-8 justify-center items-center bg-[var(--bg-primary)] w-full z-0"
+      className="relative min-h-screen py-4 lg:py-8 flex flex-col gap-4 sm:gap-6 md:gap-8 justify-center items-center bg-[var(--bg-primary)] w-full z-0 overflow-hidden"
       aria-labelledby="skills-heading"
     >
-      <div className="px-4 md:px-0 flex flex-col gap-8 lg:gap-0 lg:flex-row items-center justify-center sm:justify-between w-full sm:w-full md:w-4/5 lg:w-4/5 mx-auto">
-        {/* Text Content */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[31%] min-h-[180px] overflow-hidden">
+        <div className="absolute inset-0 bg-[#111827]/75" />
+        <div className="absolute inset-x-0 top-0 h-5 bg-[#374151]/35" />
+        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[var(--bg-primary)] to-transparent" />
         <motion.div
-          initial={{ opacity: 0, y: 100 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          className="absolute inset-x-0 top-[45%] h-2"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(90deg, rgba(255,255,255,0.55) 0 96px, transparent 96px 168px)",
+            backgroundSize: "168px 8px",
+          }}
+          animate={{ backgroundPositionX: ["0px", "168px"] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "linear" }}
+        />
+      </div>
+
+      <div className="relative z-10 px-4 md:px-0 flex flex-col gap-8 lg:gap-0 lg:flex-row items-center justify-center sm:justify-between w-full sm:w-full md:w-4/5 lg:w-4/5 mx-auto">
+        <motion.div
+          variants={textVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.35 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className="flex flex-col gap-6"
           aria-live="polite"
@@ -439,37 +192,303 @@ const Skills: React.FC = () => {
           </h1>
 
           <p className="text-sm font-normal leading-6 text-white opacity-65 max-w-lg">
-            I specialize in building modern web applications using cutting-edge
-            technologies. Drag to rotate the sphere and scroll to zoom in and explore my technical
-            skills and expertise.
+            I build reliable full-stack products with modern frontend systems,
+            production-ready APIs, cloud deployment workflows, and thoughtful
+            performance practices.
           </p>
         </motion.div>
 
-        {/* 3D Skills Sphere */}
         <motion.div
           initial={{ opacity: 0, y: 100 }}
           whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="w-full lg:w-[580px] h-[400px] lg:h-[500px] relative"
+          className="w-full lg:w-[620px] h-[430px] lg:h-[500px] relative translate-y-8 lg:translate-y-14"
+          aria-label="Animated truck carrying skills"
         >
-          <div className="border border-gray-700 rounded-md bg-[var(--bg-primary)] w-full h-full flex items-center justify-center relative overflow-hidden">
-            <canvas
-              ref={canvasRef}
-              className="w-full h-full cursor-grab active:cursor-grabbing"
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseUp}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-              onWheel={handleWheel}
-              style={{ touchAction: "none" }}
-            />
+          <div className="w-full h-full relative overflow-hidden">
+            <svg
+              className="absolute inset-0 h-full w-full"
+              viewBox="0 0 720 500"
+              fill="none"
+              role="img"
+              aria-labelledby="skills-truck-title"
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <title id="skills-truck-title">
+                {/* A delivery truck carrying web development skills on a road */}
+                 Mastering Skills, One Step at a Time
+              </title>
 
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-xs text-white opacity-40 pointer-events-none">
-              Drag to rotate • Scroll to zoom
-            </div>
+              <defs>
+                <linearGradient id="truckRed" x1="0" x2="1">
+                  <stop offset="0%" stopColor="#E94F37" />
+                  <stop offset="45%" stopColor="#F97316" />
+                  <stop offset="100%" stopColor="#B91C1C" />
+                </linearGradient>
+                <linearGradient id="bedMetal" x1="0" x2="1" y1="0" y2="1">
+                  <stop offset="0%" stopColor="#475569" />
+                  <stop offset="52%" stopColor="#1F2937" />
+                  <stop offset="100%" stopColor="#111827" />
+                </linearGradient>
+                <linearGradient id="windowGlass" x1="0" x2="1" y1="0" y2="1">
+                  <stop offset="0%" stopColor="#BAE6FD" stopOpacity="0.95" />
+                  <stop offset="48%" stopColor="#38BDF8" stopOpacity="0.66" />
+                  <stop offset="100%" stopColor="#0F172A" stopOpacity="0.9" />
+                </linearGradient>
+                <radialGradient id="headlightGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="#FEF3C7" />
+                  <stop offset="100%" stopColor="#F59E0B" stopOpacity="0" />
+                </radialGradient>
+                <filter id="softShadow" x="-20%" y="-20%" width="140%" height="150%">
+                  <feDropShadow
+                    dx="0"
+                    dy="18"
+                    stdDeviation="12"
+                    floodColor="#020617"
+                    floodOpacity="0.45"
+                  />
+                </filter>
+              </defs>
+
+              <motion.g
+                animate={{ x: [-24, 24, -24] }}
+                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+                opacity="0.28"
+              >
+                <path
+                  d="M-30 276 C70 230 150 248 226 218 C306 186 378 206 446 178 C540 140 632 158 760 112"
+                  stroke="#38BDF8"
+                  strokeWidth="1.2"
+                />
+                <path
+                  d="M-20 326 C96 284 172 300 266 268 C352 238 418 260 500 226 C594 188 650 204 760 164"
+                  stroke="#FB923C"
+                  strokeWidth="1.2"
+                />
+              </motion.g>
+
+              <motion.g
+                filter="url(#softShadow)"
+                animate={{ y: [0, -2, 0, 1.5, 0] }}
+                transition={{ duration: 1.9, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <g transform="translate(34 140) scale(0.9)">
+                <ellipse cx="390" cy="364" rx="312" ry="24" fill="#020617" opacity="0.52" />
+                <ellipse cx="168" cy="366" rx="58" ry="10" fill="#020617" opacity="0.72" />
+                <ellipse cx={middleWheelX} cy="366" rx="58" ry="10" fill="#020617" opacity="0.72" />
+                <ellipse cx={rearWheelX} cy="366" rx="58" ry="10" fill="#020617" opacity="0.72" />
+
+                <path
+                  d={`M210 ${bedTop} H${bedCornerStart} C${bedRight - 16} ${bedTop} ${bedRight} ${
+                    bedTop + 16
+                  } ${bedRight} ${bedTop + 38} V292 H210 Z`}
+                  fill="url(#bedMetal)"
+                />
+                <path
+                  d={`M224 ${bedTop + 18} H${bedRight - 20} V${bedTop + 46} H224 Z`}
+                  fill="#94A3B8"
+                  opacity="0.2"
+                />
+                <path
+                  d={`M210 292 H${bedRight - 2} V318 H210 Z`}
+                  fill="#0F172A"
+                />
+                <path
+                  d={`M212 ${bedTop} H${bedRight - 4}`}
+                  stroke="#CBD5E1"
+                  strokeWidth="3"
+                  opacity="0.35"
+                />
+
+                {cargoSkills.map((skill, index) => (
+                  <motion.g
+                    key={skill.name}
+                    animate={{
+                      y: [0, index % 2 === 0 ? -4 : 4, 0],
+                      rotate: [0, index % 2 === 0 ? 0.7 : -0.7, 0],
+                    }}
+                    transition={{
+                      duration: 2.4 + index * 0.08,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: index * 0.08,
+                    }}
+                    style={{
+                      transformBox: "fill-box",
+                      transformOrigin: "center",
+                    }}
+                  >
+                    <rect
+                      x={skill.x}
+                      y={skill.y}
+                      width={skill.width}
+                      height="34"
+                      rx="6"
+                      fill="#0F172A"
+                      stroke={skill.color}
+                      strokeWidth="1.5"
+                    />
+                    <rect
+                      x={skill.x + 5}
+                      y={skill.y + 5}
+                      width={skill.width - 10}
+                      height="7"
+                      rx="3.5"
+                      fill={skill.color}
+                      opacity="0.25"
+                    />
+                    <text
+                      x={skill.x + skill.width / 2}
+                      y={skill.y + 23}
+                      textAnchor="middle"
+                      fontSize="13"
+                      fontWeight="700"
+                      fill={skill.color}
+                      style={{ letterSpacing: 0 }}
+                    >
+                      {skill.name}
+                    </text>
+                  </motion.g>
+                ))}
+
+                <path
+                  d="M76 226 C76 185 103 150 145 143 L205 132 C230 127 252 146 252 172 V292 H76 Z"
+                  fill="url(#truckRed)"
+                />
+                <path
+                  d="M116 168 C124 158 141 151 158 150 L199 145 C215 143 228 155 228 171 V213 H104 V195 C104 184 108 174 116 168 Z"
+                  fill="url(#windowGlass)"
+                />
+                <path
+                  d="M162 151 L162 213"
+                  stroke="#0F172A"
+                  strokeWidth="5"
+                  opacity="0.55"
+                />
+                <path
+                  d="M88 248 H252 V318 H72 V278 C72 262 76 252 88 248 Z"
+                  fill="#C2410C"
+                />
+                <path
+                  d="M76 226 H252 V252 H88 C80 252 76 244 76 226 Z"
+                  fill="#FB923C"
+                  opacity="0.45"
+                />
+                <rect x="66" y="294" width="126" height="22" rx="7" fill="#111827" />
+                <rect x="224" y="292" width={chassisWidth} height="28" rx="7" fill="#111827" />
+                <rect x="78" y="258" width="22" height="18" rx="5" fill="#FDE68A" />
+                <ellipse cx="82" cy="267" rx="40" ry="24" fill="url(#headlightGlow)" opacity="0.42" />
+
+                <g>
+                  <animateTransform
+                    attributeName="transform"
+                    type="rotate"
+                    from="0 168 318"
+                    to="-360 168 318"
+                    dur="1.7s"
+                    repeatCount="indefinite"
+                  />
+                  <circle cx="168" cy="318" r="48" fill="#020617" />
+                  <circle
+                    cx="168"
+                    cy="318"
+                    r="42"
+                    fill="none"
+                    stroke="#1F2937"
+                    strokeWidth="8"
+                    strokeDasharray="10 9"
+                  />
+                  <circle cx="168" cy="318" r="31" fill="#475569" />
+                  <circle cx="168" cy="318" r="11" fill="#CBD5E1" />
+                  <path d="M168 287 V349 M137 318 H199 M146 296 L190 340 M190 296 L146 340" stroke="#E5E7EB" strokeWidth="3" opacity="0.65" />
+                </g>
+                <g>
+                  <animateTransform
+                    attributeName="transform"
+                    type="rotate"
+                    from={`0 ${rearWheelX} 318`}
+                    to={`-360 ${rearWheelX} 318`}
+                    dur="1.7s"
+                    repeatCount="indefinite"
+                  />
+                  <circle cx={rearWheelX} cy="318" r="48" fill="#020617" />
+                  <circle
+                    cx={rearWheelX}
+                    cy="318"
+                    r="42"
+                    fill="none"
+                    stroke="#1F2937"
+                    strokeWidth="8"
+                    strokeDasharray="10 9"
+                  />
+                  <circle cx={rearWheelX} cy="318" r="31" fill="#475569" />
+                  <circle cx={rearWheelX} cy="318" r="11" fill="#CBD5E1" />
+                  <path
+                    d={`M${rearWheelX} 287 V349 M${rearWheelX - 31} 318 H${
+                      rearWheelX + 31
+                    } M${rearWheelX - 22} 296 L${rearWheelX + 22} 340 M${
+                      rearWheelX + 22
+                    } 296 L${rearWheelX - 22} 340`}
+                    stroke="#E5E7EB"
+                    strokeWidth="3"
+                    opacity="0.65"
+                  />
+                </g>
+                <g>
+                  <animateTransform
+                    attributeName="transform"
+                    type="rotate"
+                    from={`0 ${middleWheelX} 318`}
+                    to={`-360 ${middleWheelX} 318`}
+                    dur="1.7s"
+                    repeatCount="indefinite"
+                  />
+                  <circle cx={middleWheelX} cy="318" r="48" fill="#020617" />
+                  <circle
+                    cx={middleWheelX}
+                    cy="318"
+                    r="42"
+                    fill="none"
+                    stroke="#1F2937"
+                    strokeWidth="8"
+                    strokeDasharray="10 9"
+                  />
+                  <circle cx={middleWheelX} cy="318" r="31" fill="#475569" />
+                  <circle cx={middleWheelX} cy="318" r="11" fill="#CBD5E1" />
+                  <path
+                    d={`M${middleWheelX} 287 V349 M${middleWheelX - 31} 318 H${
+                      middleWheelX + 31
+                    } M${middleWheelX - 22} 296 L${middleWheelX + 22} 340 M${
+                      middleWheelX + 22
+                    } 296 L${middleWheelX - 22} 340`}
+                    stroke="#E5E7EB"
+                    strokeWidth="3"
+                    opacity="0.65"
+                  />
+                </g>
+                </g>
+              </motion.g>
+
+              <motion.g
+                animate={{ x: [16, 126], opacity: [0, 0.36, 0] }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: "easeOut" }}
+                transform="translate(34 140) scale(0.9)"
+              >
+                <path
+                  d="M82 284 C44 278 18 270 -20 260"
+                  stroke="#CBD5E1"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M120 304 C78 308 44 316 -6 334"
+                  stroke="#CBD5E1"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+              </motion.g>
+            </svg>
           </div>
         </motion.div>
       </div>

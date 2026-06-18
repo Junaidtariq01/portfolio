@@ -19,12 +19,13 @@ const Navbar = () => {
 
   return (
     <header className="w-full bg-[var(--bg-primary)] pt-4 px-4 lg:px-0 relative">
-      <div className="flex flex-row items-center justify-between w-full lg:w-4/5 mx-auto">
-        <div>
+      <div className="flex flex-row items-center justify-between  w-full lg:w-4/5 mx-auto">
+        <div className="flex items-center justify-between ">
           <Logo />
+        <div className=" text-lg font-bold h-1.9 w-2.5 mx-auto text-white tracking-tight cursor-pointer " >JunaidTariq</div>
         </div>
         <nav className="hidden md:block w-full">
-          <ul className="flex flex-row items-center justify-center md:gap-12 w-full">
+          <ul className="flex flex-row items-center justify-center md:gap-10 w-full">
             {navLinks.map((link) => (
               <li key={link.name} className="text-base font-normal text-white">
                 <a href={link.href}>{link.name}</a>

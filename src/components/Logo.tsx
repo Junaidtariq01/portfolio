@@ -6,9 +6,9 @@ const Logo = () => {
       priority
       width={1000}
       height={1000}
-      src="/images/logo.png"
+      src="/logo2.png"
       alt="Junaid Tariq - logo"
-      className="h-[48px] w-[170px] object-contain"
+      className="h-[65px] w-[180px] object-contain"
     />
   );
 };

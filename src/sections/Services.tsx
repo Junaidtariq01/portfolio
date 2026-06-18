@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Code2, Smartphone, Palette, Lightbulb } from "lucide-react";
+import { Code2, Palette, Lightbulb, Laptop } from "lucide-react";
 
 const services = [
   {
@@ -18,15 +18,15 @@ const services = [
     ],
   },
   {
-    title: "Mobile Development",
+    title: "IoT and AI Intergration",
     description:
-      "Creating native and cross-platform mobile applications that deliver exceptional user experiences.",
-    icon: <Smartphone className="w-8 h-8" />,
+      "This Integration combines connected smart devices with artificial intelligence to collect, analyze, and act on real-time data, enabling intelligent automation and decision-making.",
+    icon: <Laptop className="w-8 h-8" />,
     features: [
-      "iOS Development",
-      "Android Development",
-      "Cross-platform Apps",
-      "Mobile UI/UX",
+      "Intelligent automation of tasks and processes",
+      "Integration of chatbots",
+      "Custom Trained AI Models for work ease",
+      "Works in Mobile and Laptop",
     ],
   },
   {
