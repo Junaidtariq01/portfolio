@@ -3,11 +3,17 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import Link from "next/link";
+// import Link from "next/link";
 
 const Hero = () => {
   const [isDesktopLoaded, setDesktopLoaded] = useState(false);
   const [isMobileLoaded, setMobileLoaded] = useState(false);
+
+    const portfolio = ()=>{
+      document.getElementById("portfolio") 
+      ?.scrollIntoView({ behavior: "smooth" }); }
+
+
   return (
     <section
       id="hero"
@@ -40,14 +46,16 @@ const Hero = () => {
           </p>
 
           <motion.button
+            onClick={portfolio}
             initial={{ scale: 1 }}
             whileHover={{ scale: 1.1 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className="w-[154px] h-[48px] bg-[var(--text-primary)] text-sm text-white font-black rounded-md"
             aria-label="See my portfolio work"
-          >
-            <Link href={"#portfolio"}>See My Work</Link>
+            >
+            See My Work
           </motion.button>
+
         </motion.div>
 
         {/* Image Section */}

@@ -12,7 +12,7 @@ const Education = () => {
       className="min-h-screen py-4 lg:py-8 flex justify-center items-center bg-[var(--bg-primary)] w-full z-0"
       aria-labelledby="education-heading"
     >
-      <div className="px-4 md:px-0 flex flex-col-reverse lg:flex-row items-center justify-center sm:justify-between w-full sm:w-full md:w-4/5 lg:w-4/5 mx-auto">
+      <div className="px-4 md:px-0 flex flex-col lg:flex-row items-center justify-center sm:justify-between w-full sm:w-full md:w-4/5 lg:w-4/5 mx-auto">
         {/* Text Content */}
         <motion.div
           initial={{ opacity: 0, y: 100 }}

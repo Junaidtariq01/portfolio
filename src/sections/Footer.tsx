@@ -19,33 +19,33 @@ const footerLinks = [
     title: "Services",
     links: [
       { name: "Web Development", href: "#services" },
-      { name: "Mobile Apps", href: "#services" },
+      { name: "IoT and AI Integration", href: "#services" },
       { name: "UI/UX Design", href: "#services" },
       { name: "Consulting", href: "#services" },
     ],
-  },
-  {
-    title: "Connect",
-    links: [
-      { name: "LinkedIn", href: "https://linkedin.com/in/JunaidTariq01" },
-      { name: "GitHub", href: "https://github.com/JunaidTariq01" },
-      { name: "Instagram", href: "https://instagram.com/" },
-      { name: "YouTube", href: "https://youtube.com/@theupcomingai" },
-    ],
-  },
+  }
+  // {
+  //   title: "Connect",
+  //   links: [
+  //     { name: "LinkedIn", href: "https://linkedin.com/in/JunaidTariq01" },
+  //     { name: "GitHub", href: "https://github.com/JunaidTariq01" },
+  //     { name: "Instagram", href: "https://instagram.com/" },
+  //     { name: "YouTube", href: "https://youtube.com/@theupcomingai" },
+  //   ],
+  // },
 ];
 
 const Footer = () => {
   return (
     <footer className="bg-[var(--bg-secondary)] text-[var(--text-secondary)] py-16 border-t border-gray-200">
       <div className="px-4 md:px-0 w-full sm:w-full md:w-4/5 lg:w-4/5 mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          {/* Brand Section */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-12">
+            {/* Brand Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="space-y-6"
+            className="space-y-6 md:col-span-1"
           >
             <div className="flex items-center space-x-2">
               <span className="text-xl font-bold text-[var(--text-secondary)]">
@@ -59,14 +59,16 @@ const Footer = () => {
           </motion.div>
 
           {/* Links Sections */}
-          {footerLinks.map((section, index) => (
+          {/* {footerLinks.map((section, index) => (
             <motion.div
               key={section.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="space-y-6"
+              className="space-y-6  "
             >
+             <div className="space-y-4 "> 
+
               <h3 className="text-lg font-semibold text-[var(--text-primary)]">
                 {section.title}
               </h3>
@@ -83,8 +85,44 @@ const Footer = () => {
                   </li>
                 ))}
               </ul>
+              {/* </div> 
+            
             </motion.div>
-          ))}
+
+          ))} 
+          
+          */}
+
+        {footerLinks.map((section, index) => (
+          <motion.div
+            key={section.title}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            className={`space-y-4 ${
+              index === 0 ? "grid-cols-1" : ""
+            }`}
+          >
+          
+            <h3 className="text-lg font-semibold text-[var(--text-primary)]">
+              {section.title}
+            </h3>
+            
+            <ul className="space-y-3">
+              {section.links.map((link) => (
+                <li key={link.name}>
+                  <a
+                    target="_blank"
+                    href={link.href}
+                    className="text-[var(--text-secondary)] opacity-65 hover:opacity-100 transition-colors duration-300"
+                    >
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        ))}
         </div>
 
         {/* Bottom Bar */}
