@@ -7,14 +7,21 @@
   --text-secondary: #391400;
 }
 
-body {
+html,body {
+        /* overflow: hidden; */
+          /* overflow-x: clip; */
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  width: 100%;
   background-color: #fdf0e9;
 }
 
 
 *{
+    /* max-width: 100%; */
     font-family: "Outfit", sans-serif;
 }
+
 
 @layer base{
     button {
