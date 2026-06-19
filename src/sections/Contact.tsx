@@ -71,7 +71,7 @@ const Contact = () => {
   useEffect(() => {
     let timer: number;
 
-    if (status === "success") {
+    if (status === "success" || status === "error") {
       timer = window.setTimeout(() => {
         setStatus("idle");
       }, 5000);

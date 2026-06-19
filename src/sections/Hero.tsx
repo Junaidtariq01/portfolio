@@ -17,7 +17,7 @@ const Hero = () => {
   return (
     <section
       id="hero"
-      className="min-h-screen py-4 lg:py-0 flex justify-center items-center bg-[var(--bg-primary)] w-full z-0"
+      className="sm:min-h-screen min-h-[80vh] py-4 lg:py-0 flex justify-center items-center bg-[var(--bg-primary)] sm:w-full z-0"
       aria-labelledby="hero-heading"
     >
       <div className="px-4 md:px-0 flex flex-col-reverse lg:flex-row items-center justify-center sm:justify-between w-full sm:w-full md:w-4/5 lg:w-4/5 mx-auto">

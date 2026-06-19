@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Logo from "./Logo";
 import { motion } from "framer-motion";
 import { SquareMenu, CircleX } from "lucide-react";
+import Link from "next/link";
 
 const navLinks = [
   { name: "About", href: "#about" },
@@ -18,13 +19,15 @@ const Navbar = () => {
 
   return (
     <header className="w-full bg-[var(--bg-primary)] pt-4 px-4 lg:px-0 relative">
-      <div className="flex items-center justify-between w-full lg:w-4/5 mx-auto">
+      <div className="flex items-center justify-between w-full lg:w-4/5 mx-auto ">
         {/* Logo + Name */}
-        <div className="flex items-center gap-1 shrink-0">
+        <div >
+          <Link href="/" className="flex items-center gap-1 shrink-0">
           <Logo />
           <span className="text-lg font-bold text-white tracking-tight whitespace-nowrap cursor-pointer">
             Junaid Tariq
           </span>
+          </Link>
         </div>
 
         {/* Desktop Navigation */}
@@ -52,7 +55,7 @@ const Navbar = () => {
                 backgroundColor: "var(--text-primary)",
               }}
               transition={{ duration: 0.4 }}
-              className="h-12 w-[138px] rounded-md border border-gray-700 text-sm font-black text-white"
+              className="h-12 w-[138px] rounded-md border border-gray-500 text-sm font-black text-white"
             >
               CONTACT
             </motion.button>
