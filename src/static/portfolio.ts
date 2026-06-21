@@ -24,10 +24,10 @@ export const projects: projectProps[] = [
     content:
       "AI-driven lead generation platform that identifies, analyzes, and prioritizes potential business opportunities within targeted regions. Uses autonomous agents to evaluate lead quality, market relevance, and growth potential, delivering actionable recommendations for strategic business expansion.",
     category: "Full Stack",
-    thumbnail: "/AgenticAi.png",
+    thumbnail: "/AgenticAI.png",
     // thumbnail:
     //   "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-    year: "February 2025",
+    year: "April 2026",
     technologies: ["React","Flask", "Supabase", "Python","FastAPI","Google Maps API","Apify", "Pinecone","Groq" ],
   },
   {
@@ -54,7 +54,7 @@ export const projects: projectProps[] = [
     category: "Full Stack",
     thumbnail:
       "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-    year: "November 2024",
+    year: "November 2025",
     technologies: ["React", "Node.js", "Express", "MongoDB", "Redux"],
   },
   {
