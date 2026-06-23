@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { projectProps } from "@/types/project";
 import { Github, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
@@ -18,7 +18,10 @@ const PortfolioCard = ({
   technologies,
   isListView = false,
 }: projectProps) => {
-  const getBadgeColor = (category: string) => {
+
+  const [expanded, setExpanded] = useState(false);
+
+    const getBadgeColor = (category: string) => {
     switch (category.toLowerCase()) {
       case "web":
         return "bg-blue-50 text-blue-600 border-blue-200";
@@ -128,9 +131,22 @@ const PortfolioCard = ({
           <h2 className="text-xl font-bold text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">
             {title}
           </h2>
-          <p className="text-sm text-[var(--text-secondary)] opacity-75 line-clamp-2">
+
+          <div>
+          <p className={`text-sm text-[var(--text-secondary)] opacity-75 transition-all duration-500 ease-in-out overflow-hidden
+            ${expanded ? "max-h-40" : "max-h-12 "}  
+             ${expanded ? "" : "line-clamp-2"} `}>
             {content}
           </p>
+          {content.length > 120 && (
+          <button type="button"
+          onClick={() => setExpanded(prev => !prev)}
+          className="mt-1 text-sm font-normal text-[var(--text-primary)] hover:underline"
+          // className="text-[var(--text-primary)] text-sm font-medium mt-1"
+          >
+          {expanded ? "Show Less" : "Read More"}
+        </button> )}
+          </div>
         </div>
 
         {/* Technologies */}

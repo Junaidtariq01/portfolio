@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 @import "tailwindcss";
 
+
 :root {
   --bg-primary: #28293e;
   --text-primary: #9c27e4;
