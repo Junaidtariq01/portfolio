@@ -245,6 +245,34 @@ const Skills: React.FC = () => {
                 </filter>
               </defs>
 
+              {/* ================= SUN ================= */}
+              <g opacity="0.95">
+                <circle cx="635" cy="70" r="30" fill="#FACC15" />
+                <circle cx="635" cy="70" r="45" fill="#FACC15" opacity="0.18" />
+              </g>
+
+              {/* ================= CLOUDS ================= */}
+              {[
+                { x: 80, y: 70 },
+                { x: 260, y: 45 },
+                { x: 480, y: 85 },
+              ].map((cloud, i) => (
+                <motion.g
+                  key={i}
+                  animate={{ x: [-15, 15, -15] }}
+                  transition={{
+                    duration: 10 + i * 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  opacity={0.9}
+                >
+                  <ellipse cx={cloud.x} cy={cloud.y} rx="24" ry="14" fill="white" />
+                  <ellipse cx={cloud.x + 20} cy={cloud.y} rx="22" ry="13" fill="white" />
+                  <ellipse cx={cloud.x + 10} cy={cloud.y - 10} rx="20" ry="12" fill="white" />
+                </motion.g>
+              ))}
+
               <motion.g
                 animate={{ x: [-24, 24, -24] }}
                 transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
@@ -268,10 +296,10 @@ const Skills: React.FC = () => {
                 transition={{ duration: 1.9, repeat: Infinity, ease: "easeInOut" }}
               >
                 <g transform="translate(34 140) scale(0.9)">
-                <ellipse cx="390" cy="364" rx="312" ry="24" fill="#020617" opacity="0.52" />
+                <ellipse cx="310" cy="364" rx="312" ry="24" fill="#020617" opacity="0.72" />
                 <ellipse cx="168" cy="366" rx="58" ry="10" fill="#020617" opacity="0.72" />
                 <ellipse cx={middleWheelX} cy="366" rx="58" ry="10" fill="#020617" opacity="0.72" />
-                <ellipse cx={rearWheelX} cy="366" rx="58" ry="10" fill="#020617" opacity="0.72" />
+                <ellipse cx={rearWheelX} cy="366" rx="58" ry="6" fill="#020617" opacity="0.72" />
 
                 <path
                   d={`M210 ${bedTop} H${bedCornerStart} C${bedRight - 16} ${bedTop} ${bedRight} ${
