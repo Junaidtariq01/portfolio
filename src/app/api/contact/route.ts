@@ -28,9 +28,9 @@ export async function POST(request: Request) {
 
     mail.setApiKey(apiKey);
 
-    const { name, email, message } = await request.json();
+    const { name, phone, email, message } = await request.json();
 
-    if (!name || !email || !message) {
+    if (!name || !phone || !email || !message) {
       return NextResponse.json(
         { error: "Name, email, and message are required." },
         { status: 400 }
@@ -101,6 +101,15 @@ body {
       <div class="value">${escapeHtml(name)}</div>
     </div>
 
+  <div class="content">
+    <div class="field">
+      <div class="label">Phone Number</div>
+      <div class="value">
+      <a href="tel: ${escapeHtml(phone)}"> 
+      ${escapeHtml(phone)}
+      </a></div>
+    </div>
+
     <div class="field">
       <div class="label">Email</div>
       <div class="value">
@@ -133,7 +142,7 @@ body {
         name: "Portfolio Contact",
       },
       subject: `New message from ${name} 📧`,
-      text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
+      text: `Name: ${name}\nPhone: ${phone}\nEmail: ${email}\n\n${message}`,
       html: htmlContent,
       replyTo: email,
     });

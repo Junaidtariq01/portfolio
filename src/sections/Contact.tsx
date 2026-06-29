@@ -37,6 +37,7 @@ const socialLinks = [
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
+    phone: "",
     email: "",
     message: "",
   });
@@ -44,6 +45,7 @@ const Contact = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState<{
     name?: string;
+    phone?: string;
     email?: string;
     message?: string;
   }>({});
@@ -53,6 +55,13 @@ const Contact = () => {
       case "name":
         if (!value.trim()) return "Name is required";
         if (value.trim().length < 2) return "Name must be at least 2 characters";
+        return "";
+      case "phone":
+        if (!value.trim()) return "Phone Number is required";
+        const pattern = /^\+?[0-9]{1,4}?[-.\s]?\(?\d{1,5}?\)?[-.\s]?\d{1,5}[-.\s]?\d{1,9}$/;
+        // const pattern = /^\+?[0-9\s\-().]{7,25}$/;
+        if (!pattern.test(value)) return "Please enter a valid Phone Number";
+        if (value.trim().length < 10) return "Phone Number must be at least 10 digits";
         return "";
       case "email":
         if (!value.trim()) return "Email is required";
@@ -88,13 +97,14 @@ const Contact = () => {
     // Validate all fields
     const errors: typeof fieldErrors = {};
     errors.name = validateField("name", formData.name);
+    errors.phone = validateField("phone", formData.phone);
     errors.email = validateField("email", formData.email);
     errors.message = validateField("message", formData.message);
     
     setFieldErrors(errors);
     
     // If there are errors, don't submit
-    if (errors.name || errors.email || errors.message) {
+    if (errors.name || errors.phone || errors.email || errors.message) {
       setStatus("error");
       setErrorMessage("Please fix the errors above before submitting.");
       return;
@@ -116,7 +126,7 @@ const Contact = () => {
       }
 
       setStatus("success");
-      setFormData({ name: "", email: "", message: "" });
+      setFormData({ name: "", phone: "", email: "", message: "" });
       setFieldErrors({});
     } catch (error) {
       setStatus("error");
@@ -217,6 +227,32 @@ const Contact = () => {
               />
               {fieldErrors.name && (
                 <p className="mt-1 text-sm text-red-400">{fieldErrors.name}</p>
+              )}
+            </div>
+
+            <div>
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-white mb-1"
+              >
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="+91 555 123 4567"
+                value={formData.phone}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-[var(--text-primary)] focus:border-[var(--text-primary)] bg-white/5 backdrop-blur-sm text-white placeholder-gray-400 transition-colors ${
+                  fieldErrors.phone
+                    ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                    : "border-gray-200"
+                }`}
+              />
+              {fieldErrors.phone && (
+                <p className="mt-1 text-sm text-red-400">{fieldErrors.phone}</p>
               )}
             </div>
             <div>
