@@ -138,12 +138,14 @@ const textVariants = {
 };
 
 function useDayNightCycle() {
-  const [now, setNow] = useState(new Date());
+  const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setNow(new Date());
-    }, 60000); // update every minute
+    const update = () => setNow(new Date());
+
+    update(); // immediately sync
+
+    const timer = setInterval(update, 1000);
 
     return () => clearInterval(timer);
   }, []);
@@ -175,40 +177,42 @@ function useDayNightCycle() {
     return {
       isDay,
       progress,
+      hours,
     };
   }, [now]);
 
   return data;
 }
 
+
+// ==========================
+// TEST MODE
+// ==========================
 // function useDayNightCycle() {
-//   // ===================================================
-//   // DEBUG MODE
-//   // Set to null to use real local time
-//   // Examples:
-//   // "06:00" -> Sunrise
-//   // "09:30" -> Morning
-//   // "12:00" -> Noon
-//   // "17:30" -> Sunset
-//   // "21:00" -> Night
-//   // ===================================================
-//   const DEBUG_TIME: string | null = "10:00";
-//   // const DEBUG_TIME: string | null = null;
+//   const TEST_MODE = true; // false = real local time
+
+//   const TEST_TIME = {
+//     hour: 10, // 0-23
+//     minute: 0,
+//     second: 0,
+//   };
+
+//   // ==========================
 
 //   const [now, setNow] = useState(() => {
-//     if (DEBUG_TIME) {
-//       const date = new Date();
-//       const [h, m] = DEBUG_TIME.split(":").map(Number);
-//       date.setHours(h, m, 0, 0);
-//       return date;
+//     if (TEST_MODE) {
+//       const d = new Date();
+//       d.setHours(TEST_TIME.hour);
+//       d.setMinutes(TEST_TIME.minute);
+//       d.setSeconds(TEST_TIME.second);
+//       return d;
 //     }
 
 //     return new Date();
 //   });
 
 //   useEffect(() => {
-//     // Don't update every minute while testing
-//     if (DEBUG_TIME) return;
+//     if (TEST_MODE) return;
 
 //     const timer = setInterval(() => {
 //       setNow(new Date());
@@ -217,35 +221,34 @@ function useDayNightCycle() {
 //     return () => clearInterval(timer);
 //   }, []);
 
-//   const data = useMemo(() => {
-//     const hours =
-//       now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
+//   const hours =
+//     now.getHours() +
+//     now.getMinutes() / 60 +
+//     now.getSeconds() / 3600;
 
-//     const sunrise = 6;
-//     const sunset = 18;
+//   const sunrise = 6;
+//   const sunset = 18;
 
-//     const isDay = hours >= sunrise && hours < sunset;
+//   const isDay = hours >= sunrise && hours < sunset;
 
-//     let progress = 0;
+//   let progress = 0;
 
-//     if (isDay) {
-//       progress = (hours - sunrise) / (sunset - sunrise);
-//     } else {
-//       const nightHours =
-//         hours >= sunset ? hours - sunset : hours + (24 - sunset);
+//   if (isDay) {
+//     progress = (hours - sunrise) / (sunset - sunrise);
+//   } else {
+//     const nightHours =
+//       hours >= sunset
+//         ? hours - sunset
+//         : hours + (24 - sunset);
 
-//       progress = nightHours / 12;
-//     }
+//     progress = nightHours / 12;
+//   }
 
-//     return {
-//       now,
-//       hours,
-//       isDay,
-//       progress,
-//     };
-//   }, [now]);
-
-//   return data;
+//   return {
+//     isDay,
+//     progress,
+//     hours,
+//   };
 // }
 
 const Skills: React.FC = () => {
@@ -276,7 +279,7 @@ const Skills: React.FC = () => {
         travelX: 100 + Math.random() * 40, // vw
         travelY: 120 + Math.random() * 80, // px
         duration: 1.8 + Math.random() * 0.7,
-        delay: Math.random() * 15,
+        delay: Math.random() * 155,
         length: 90 + Math.random() * 70,
       })),
     [],
@@ -297,8 +300,8 @@ const Skills: React.FC = () => {
         x: Math.random() * 70 + 10,
         y: Math.random() * 20 + 5,
         length: 120 + Math.random() * 80,
-        delay: Math.random() * 15,
-        duration: 2 + Math.random(),
+        delay: Math.random() * 155,
+        duration: 20 + Math.random() * 10,
         rotate: 25 + Math.random() * 15,
       })),
     [],
@@ -753,77 +756,13 @@ const Skills: React.FC = () => {
                     cx={x + 10}
                     cy={y - 6}
                     r="20"
+                  
                     fill="var(--bg-primary)"
                   />
                 </g>
               )}
 
-              {/* stars */}
 
-              <g clipPath="url(#skyClip)">
-                {/* shooting star */}
-
-                {!isDay && (
-                  <motion.g
-                    initial={{
-                      x: -120,
-                      y: 20,
-                      opacity: 0,
-                    }}
-                    animate={{
-                      x: 820,
-                      y: 260,
-                      opacity: [0, 1, 1, 0],
-                    }}
-                    transition={{
-                      duration: 1.8,
-                      repeat: Infinity,
-                      repeatDelay: 8,
-                      ease: "easeOut",
-                    }}
-                  >
-                    <line
-                      x1="0"
-                      y1="0"
-                      x2="-80"
-                      y2="-20"
-                      stroke="white"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      opacity="0.4"
-                    />
-
-                    <circle cx="0" cy="0" r="4" fill="white" />
-                  </motion.g>
-                )}
-
-                {/* fireflies */}
-                {!isDay &&
-                  Array.from({ length: 18 }).map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="absolute rounded-full bg-yellow-300"
-                      style={{
-                        width: 4 + Math.random() * 3,
-                        height: 4 + Math.random() * 3,
-                        left: `${5 + i * 6}%`,
-                        bottom: `${15 + Math.random() * 35}px`,
-                        filter: "blur(.4px)",
-                        boxShadow: "0 0 12px #fde047",
-                      }}
-                      animate={{
-                        y: [0, -15, 0],
-                        x: [0, 6, -6, 0],
-                        opacity: [0.2, 1, 0.2],
-                      }}
-                      transition={{
-                        duration: 2 + Math.random() * 3,
-                        repeat: Infinity,
-                        delay: Math.random() * 4,
-                      }}
-                    />
-                  ))}
-              </g>
 
               <motion.g
                 animate={{ x: [-24, 24, -24] }}
