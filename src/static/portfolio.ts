@@ -47,7 +47,7 @@ export const projects: projectProps[] = [
     {
     id: 4,
     title: "E-Commerce Platform",
-    deployURL: "",
+    deployURL: "https://tk-brothers-ochre.vercel.app",
     gitURL: "https://github.com/Junaidtariq01",
     content:
       "A full-featured MERN stack e-commerce platform with product catalog, cart/wishlist functionality, and secure test payment integration. Implemented advanced features including product search/filtering and order tracking system.",
