@@ -44,18 +44,19 @@ export const projects: projectProps[] = [
     year: "June 2026",
     technologies: [  "Java","Java Swing","SQL","Socket Programming","AES Encryption","Multithreading"],
   },
-    {
+  {
     id: 4,
     title: "E-Commerce Platform",
     deployURL: "https://tk-brothers-ochre.vercel.app",
     gitURL: "https://github.com/Junaidtariq01",
     content:
-      "A full-featured MERN stack e-commerce platform with product catalog, cart/wishlist functionality, and secure test payment integration. Implemented advanced features including product search/filtering and order tracking system.",
+    "A full-featured MERN stack e-commerce platform with product catalog, cart/wishlist functionality, and secure test payment integration. Implemented advanced features including product search/filtering and order tracking system.",
     category: "Full Stack",
-    thumbnail:
-      "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+    thumbnail:"/ECommerce.png",
+    // thumbnail:
+      // "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     year: "November 2025",
-    technologies: ["React", "Node.js", "Express", "MongoDB", "Redux"],
+    technologies: ["React", "Next.js", "MongoDB", "TypeScript", "Tailwind CSS", "Stripe API"],
   },
   {
     id: 5,
