@@ -69,7 +69,7 @@ const About = () => {
               unoptimized
               width={2000}
               height={2000}
-              src="/images/about-desktop.png"
+              src="/images/about-desktop.webp"
               alt="Junaid Tariq - Full Stack Developer, standing with laptop and code snippets in the background"
               className={`h-[554px] w-[568px] object-contain transition-opacity duration-500 ${
                 isDesktopLoaded ? "opacity-100" : "opacity-0"
@@ -88,7 +88,7 @@ const About = () => {
               unoptimized
               width={2000}
               height={2000}
-              src="/images/about-mobile.png"
+              src="/images/about-mobile.webp"
               alt="Junaid Tariq - Mobile Developer, working on a smartphone UI"
               className={`h-[320px] w-[330px] object-contain transition-opacity duration-500 ${
                 isMobileLoaded ? "opacity-100" : "opacity-0"
